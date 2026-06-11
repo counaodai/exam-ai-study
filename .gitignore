@@ -33,5 +33,9 @@ Thumbs.db
 *.db
 *.sqlite3
 
+# 向量数据库
+chroma_data/
+backend/chroma_data/
+
 # 上传的文件（如果有的话）
 uploads/
