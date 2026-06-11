@@ -417,7 +417,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 📧 2833693854@qq.com
 
-我会尽量及时回复大家，也欢迎一起交流校园项目、技术学习之类的话题，大家一起进步嘛 😊
+我会尽量及时回复大家，也欢迎一起交流项目、技术学习之类的话题，大家一起进步嘛 😊
 <div align="center">
 
 **如果这个项目对你有帮助，请 :star: 给一个 Star！**
