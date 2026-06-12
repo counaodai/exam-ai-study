@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { ElMessage } from 'element-plus'
-import type { UploadFile, UploadRawFile } from 'element-plus'
+import type { UploadFile } from 'element-plus'
 import {
   Upload as UploadIcon,
   FolderOpened,
   Close,
   RefreshRight,
-  Delete,
-  CircleCheck,
-  CircleClose,
 } from '@element-plus/icons-vue'
 import { formatFileSize } from '@/utils/format'
 import { STATUS_MAP } from '@/utils/constants'
@@ -45,19 +42,7 @@ function isAllowedFile(filename: string): boolean {
 function handleFilesSelected(uploadFile: UploadFile) {
   if (!uploadFile.raw) return
   const files = [uploadFile.raw]
-  documentStore.addToQueue(files)
-}
-
-function handleMultiFilesChange(uploadFiles: UploadFile[]) {
-  const files: File[] = []
-  for (const f of uploadFiles) {
-    if (f.raw) {
-      files.push(f.raw)
-    }
-  }
-  if (files.length > 0) {
-    documentStore.addToQueue(files)
-  }
+  documentStore.addToQueue(files, selectedModule.value)
 }
 
 function triggerFolderUpload() {
@@ -98,7 +83,7 @@ function handleFolderSelected(event: Event) {
     ElMessage.info(`已过滤 ${skipped} 个不支持的文件`)
   }
 
-  documentStore.addToQueue(files)
+  documentStore.addToQueue(files, selectedModule.value)
   ElMessage.success(`已添加 ${files.length} 个文件到上传队列`)
   input.value = ''
 }
@@ -149,7 +134,10 @@ function getStatusLabel(status: string): string {
 
 <template>
   <div class="upload-page">
-    <h1>文档导入</h1>
+    <h1>
+      <iconify-icon icon="mdi:sprout-outline" width="28" class="title-icon" />
+      文档导入
+    </h1>
 
     <el-card class="upload-card">
       <div class="upload-actions">
@@ -182,11 +170,9 @@ function getStatusLabel(status: string): string {
         :disabled="documentStore.isQueueActive"
         class="drag-upload"
       >
-        <el-icon class="el-icon--upload" :size="48">
-          <UploadIcon />
-        </el-icon>
+        <iconify-icon icon="mdi:leaf-circle-outline" width="48" class="drag-leaf-icon" />
         <div class="el-upload__text">
-          拖拽多个文件到此处批量上传
+          拖拽文件到这里，一次上传一堆
         </div>
         <template #tip>
           <div class="el-upload__tip">支持 PDF / Word / TXT / Markdown，单文件最大 50MB</div>
@@ -365,32 +351,31 @@ function getStatusLabel(status: string): string {
 
 <style scoped>
 .upload-page {
-  animation: fadeIn 0.4s ease-out;
+  animation: fadeIn var(--transition-fade);
 }
 
 .upload-page h1 {
   margin-bottom: 24px;
-  font-family: var(--font-heading);
-  font-size: 24px;
-  position: relative;
-  padding-left: 14px;
+  font-family: var(--font-display);
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
 }
 
-.upload-page h1::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 22px;
-  background: var(--primary-gradient);
-  border-radius: 2px;
+.title-icon {
+  color: var(--primary-color);
+  background: var(--primary-bg);
+  padding: 6px;
+  border-radius: var(--radius-hand-drawn-soft);
+  box-sizing: content-box;
 }
 
 .upload-card {
   margin-bottom: 20px;
   overflow: hidden;
+  border-radius: var(--radius-hand-drawn) !important;
 }
 
 .upload-actions {
@@ -410,26 +395,31 @@ function getStatusLabel(status: string): string {
 .drag-upload :deep(.el-upload-dragger) {
   width: 100%;
   padding: 48px 0;
-  border: 2px dashed var(--border-color);
-  border-radius: var(--radius-md);
-  transition: all var(--transition-normal);
-  background: linear-gradient(135deg, rgba(240, 253, 250, 0.5) 0%, rgba(255, 255, 255, 0.8) 100%);
+  border: 2px dashed var(--primary-lighter);
+  border-radius: var(--radius-hand-drawn);
+  transition: all var(--transition-fade);
+  background: linear-gradient(135deg, var(--primary-bg) 0%, var(--bg-surface) 100%);
 }
 
 .drag-upload :deep(.el-upload-dragger:hover) {
   border-color: var(--primary-color);
-  background: linear-gradient(135deg, rgba(240, 253, 250, 0.8) 0%, rgba(255, 255, 255, 1) 100%);
-  box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.08);
+  background: linear-gradient(135deg, var(--primary-bg) 0%, var(--bg-surface) 100%);
+  box-shadow: 0 0 0 4px rgba(91, 140, 90, 0.12);
+  transition: all var(--transition-hover-lift);
 }
 
-.drag-upload :deep(.el-icon--upload) {
+.drag-leaf-icon {
   color: var(--primary-color);
   margin-bottom: 16px;
-  opacity: 0.8;
+  opacity: 0.85;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .drag-upload :deep(.el-upload__text) {
   font-size: 15px;
+  font-family: var(--font-heading);
   color: var(--text-secondary);
   margin-bottom: 8px;
 }
@@ -446,11 +436,13 @@ function getStatusLabel(status: string): string {
   gap: 10px;
   padding-top: 16px;
   border-top: 1px solid var(--border-light);
+  font-family: var(--font-heading);
 }
 
 .queue-card {
   margin-bottom: 20px;
   overflow: hidden;
+  border-radius: var(--radius-hand-drawn) !important;
 }
 
 .queue-header {
@@ -458,6 +450,7 @@ function getStatusLabel(status: string): string {
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+  font-family: var(--font-heading);
 }
 
 .queue-stats {
@@ -483,8 +476,8 @@ function getStatusLabel(status: string): string {
   padding: 12px 14px;
   border-bottom: 1px solid var(--border-light);
   flex-wrap: wrap;
-  transition: all var(--transition-fast);
-  border-radius: var(--radius-sm);
+  transition: all var(--transition-fade);
+  border-radius: var(--radius-hand-drawn-soft);
   margin-bottom: 4px;
 }
 
@@ -494,14 +487,15 @@ function getStatusLabel(status: string): string {
 
 .queue-item:hover {
   background: var(--bg-muted);
+  transition: all var(--transition-hover-lift);
 }
 
 .queue-item.completed {
-  background: linear-gradient(90deg, rgba(240, 253, 250, 0.6) 0%, transparent 100%);
+  background: linear-gradient(90deg, rgba(91, 140, 90, 0.10) 0%, transparent 100%);
 }
 
 .queue-item.failed {
-  background: linear-gradient(90deg, rgba(254, 235, 235, 0.6) 0%, transparent 100%);
+  background: linear-gradient(90deg, rgba(192, 105, 74, 0.10) 0%, transparent 100%);
 }
 
 .queue-item.cancelled {
@@ -519,6 +513,7 @@ function getStatusLabel(status: string): string {
 
 .queue-item-name {
   font-size: 14px;
+  font-family: var(--font-heading);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -546,9 +541,9 @@ function getStatusLabel(status: string): string {
   font-size: 12px;
   color: var(--el-color-danger);
   padding-left: 0;
-  background: rgba(239, 68, 68, 0.05);
+  background: rgba(192, 105, 74, 0.08);
   padding: 6px 10px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-hand-drawn-soft);
   margin-top: 4px;
 }
 
@@ -561,6 +556,7 @@ function getStatusLabel(status: string): string {
 .list-card {
   margin-top: 20px;
   overflow: hidden;
+  border-radius: var(--radius-hand-drawn) !important;
 }
 
 .status-cell {
@@ -571,20 +567,25 @@ function getStatusLabel(status: string): string {
 }
 
 :deep(.el-table) {
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-hand-drawn);
   overflow: hidden;
 }
 
 :deep(.el-table th.el-table__cell) {
   background: var(--bg-muted) !important;
   font-weight: 600;
+  font-family: var(--font-heading);
+}
+
+:deep(.el-table .cell) {
+  font-family: var(--font-heading);
 }
 
 :deep(.el-table td.el-table__cell) {
-  transition: background-color var(--transition-fast);
+  transition: background-color var(--transition-fade);
 }
 
 :deep(.el-table body tr:hover > td) {
-  background-color: rgba(240, 253, 250, 0.5) !important;
+  background-color: rgba(91, 140, 90, 0.08) !important;
 }
 </style>

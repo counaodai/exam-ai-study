@@ -41,12 +41,13 @@ export const useDocumentStore = defineStore('document', () => {
     documents.value = await documentApi.getDocumentList()
   }
 
-  function addToQueue(files: File[]) {
+  function addToQueue(files: File[], module?: string) {
     const items: UploadQueueItem[] = files.map((file) => ({
       id: generateId(),
       file,
       filename: file.name,
       file_size: file.size,
+      module,
       status: 'waiting' as UploadQueueStatus,
       progress: 0,
       error: null,

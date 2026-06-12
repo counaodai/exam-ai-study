@@ -28,10 +28,22 @@ const stats = computed(() => {
 
     <template v-else-if="chunks.length > 0">
       <div class="chunk-stats">
-        <el-tag type="info" size="large">总计 {{ stats.total }} 个分块</el-tag>
-        <el-tag v-if="stats.questions" type="danger">题目 {{ stats.questions }}</el-tag>
-        <el-tag v-if="stats.knowledge" type="primary">知识点 {{ stats.knowledge }}</el-tag>
-        <el-tag v-if="stats.methods" type="success">方法 {{ stats.methods }}</el-tag>
+        <div class="stat-pill stat-total">
+          <span class="stat-num">{{ stats.total }}</span>
+          <span class="stat-label">个分块</span>
+        </div>
+        <div v-if="stats.questions" class="stat-pill stat-question">
+          <span class="stat-num">{{ stats.questions }}</span>
+          <span class="stat-label">题目</span>
+        </div>
+        <div v-if="stats.knowledge" class="stat-pill stat-knowledge">
+          <span class="stat-num">{{ stats.knowledge }}</span>
+          <span class="stat-label">知识点</span>
+        </div>
+        <div v-if="stats.methods" class="stat-pill stat-method">
+          <span class="stat-num">{{ stats.methods }}</span>
+          <span class="stat-label">方法</span>
+        </div>
       </div>
 
       <el-scrollbar max-height="500px">
@@ -63,30 +75,84 @@ const stats = computed(() => {
       </el-scrollbar>
     </template>
 
-    <el-empty v-else description="暂无分块数据" />
+    <el-empty v-else description="还是空的呢，先去添加一些吧" />
   </div>
 </template>
 
 <style scoped>
 .chunk-stats {
   display: flex;
-  gap: 10px;
-  margin-bottom: 18px;
+  gap: 12px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
 }
 
+.stat-pill {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-hand-drawn-soft);
+  background: var(--bg-surface);
+  transition: all var(--transition-hover-lift);
+  animation: fadeInUp var(--transition-fade) forwards;
+}
+
+.stat-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.stat-total {
+  background: linear-gradient(135deg, var(--primary-bg) 0%, var(--bg-surface) 100%);
+  border-color: var(--primary-lighter);
+}
+.stat-total .stat-num { color: var(--primary-color); }
+
+.stat-question {
+  border-color: rgba(192, 105, 74, 0.3);
+}
+.stat-question .stat-num { color: var(--accent-color); }
+
+.stat-knowledge {
+  border-color: var(--primary-lighter);
+}
+.stat-knowledge .stat-num { color: var(--primary-color); }
+
+.stat-method {
+  border-color: rgba(123, 160, 122, 0.4);
+}
+.stat-method .stat-num { color: var(--success-color); }
+
 .chunk-item {
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-hand-drawn-soft);
   margin-bottom: 14px;
   overflow: hidden;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-hover-lift);
   box-shadow: var(--shadow-sm);
+  background: var(--bg-surface);
+  animation: fadeInUp var(--transition-fade) forwards;
 }
 
 .chunk-item:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
+  border-color: var(--primary-lighter);
 }
 
 .chunk-header {
@@ -94,15 +160,16 @@ const stats = computed(() => {
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: linear-gradient(90deg, var(--bg-muted) 0%, rgba(241, 245, 249, 0.5) 100%);
-  border-bottom: 1px solid var(--border-light);
+  background: linear-gradient(135deg, var(--primary-bg) 0%, var(--bg-surface) 100%);
+  border-bottom: 2px solid var(--border-light);
 }
 
 .chunk-index {
+  font-family: var(--font-display);
   font-weight: 700;
   color: var(--primary-color);
-  min-width: 30px;
-  font-size: 13px;
+  min-width: 32px;
+  font-size: 14px;
 }
 
 .chunk-length {
@@ -110,6 +177,7 @@ const stats = computed(() => {
   font-size: 12px;
   color: var(--text-muted);
   font-weight: 500;
+  font-family: var(--font-heading);
 }
 
 .chunk-content {

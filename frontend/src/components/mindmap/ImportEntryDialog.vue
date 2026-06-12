@@ -46,8 +46,8 @@ async function handleQuestionSelectorConfirm(selectedQuestions: QuestionListItem
     options: undefined,
     answer: q.answer || undefined,
     explanation: q.explanation || undefined,
-    moduleId: q.moduleId || q.module_id,
-    secondaryModule: q.modulePath || q.module_name,
+    moduleId: q.moduleId || q.moduleName,
+    secondaryModule: q.modulePath || q.moduleName,
   }))
 
   // 初始化进度
@@ -86,7 +86,7 @@ async function handleQuestionSelectorConfirm(selectedQuestions: QuestionListItem
     })
 
     if (result.failed.length > 0) {
-      ElMessage.warning(`导入完成：成功 ${result.imported_count} 道，失败 ${result.failed.length} 道`)
+      ElMessage.warning(`导入完成：成功${result.imported_count} 道，失败 ${result.failed.length} 道`)
     }
   } catch (err: any) {
     ElMessage.error(err?.response?.data?.detail || '导入失败')
@@ -111,23 +111,27 @@ function handleProgressCancel() {
     :model-value="visible"
     @update:model-value="(v: boolean) => emit('update:visible', v)"
     title="导入题目"
-    width="420px"
+    width="440px"
     :close-on-click-modal="false"
   >
     <div class="import-options">
       <div class="import-option-card" @click="handleSelectHistory">
-        <div class="option-icon">📋</div>
+        <div class="option-icon">
+          <iconify-icon icon="mdi:file-document-outline" width="28"></iconify-icon>
+        </div>
         <div class="option-info">
           <div class="option-title">从历史题目选择</div>
-          <div class="option-desc">从AI问答记录中选择已有题目批量导入</div>
+          <div class="option-desc">从 AI 问答记录中挑选已有题目批量导入</div>
         </div>
       </div>
 
       <div class="import-option-card" @click="handleSelectPaste">
-        <div class="option-icon">📝</div>
+        <div class="option-icon">
+          <iconify-icon icon="mdi:content-paste" width="28"></iconify-icon>
+        </div>
         <div class="option-info">
           <div class="option-title">粘贴题目内容</div>
-          <div class="option-desc">粘贴纯文本或Markdown格式的题目，自动识别并导入</div>
+          <div class="option-desc">粘贴纯文本或 Markdown，自动识别并导入</div>
         </div>
       </div>
     </div>
@@ -162,30 +166,40 @@ function handleProgressCancel() {
 .import-options {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .import-option-card {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 16px;
-  border: 1px solid var(--el-border-color);
-  border-radius: 8px;
+  padding: 18px;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-hand-drawn-soft);
+  background: var(--bg-surface);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-hover-lift);
+  animation: cardEnter var(--transition-fade) forwards;
 }
 
 .import-option-card:hover {
-  border-color: var(--el-color-primary);
-  background: var(--el-color-primary-light-9);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
+  border-color: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-bg) 0%, var(--bg-surface) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(91, 140, 90, 0.18);
 }
 
 .option-icon {
-  font-size: 32px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  color: var(--primary-color);
+  background: var(--primary-bg);
+  border-radius: var(--radius-hand-drawn-soft);
+  border: 2px solid var(--primary-lighter);
 }
 
 .option-info {
@@ -197,11 +211,12 @@ function handleProgressCancel() {
 .option-title {
   font-size: 15px;
   font-weight: 600;
-  color: var(--el-text-color-primary);
+  font-family: var(--font-heading);
+  color: var(--text-primary);
 }
 
 .option-desc {
   font-size: 13px;
-  color: var(--el-text-color-secondary);
+  color: var(--text-secondary);
 }
 </style>

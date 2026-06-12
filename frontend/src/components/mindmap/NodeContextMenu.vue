@@ -35,24 +35,24 @@ function handleClickOutside() {
       @click.stop
     >
       <div class="menu-item" @click="handleAction('add')">
-        <el-icon><Plus /></el-icon>
+        <iconify-icon icon="mdi:plus" width="18" class="menu-icon" />
         <span>添加子节点</span>
       </div>
       <div class="menu-item" @click="handleAction('edit')">
-        <el-icon><Edit /></el-icon>
+        <iconify-icon icon="mdi:pencil-outline" width="18" class="menu-icon" />
         <span>编辑节点名称</span>
       </div>
       <div class="menu-item" @click="handleAction('questions')">
-        <el-icon><Document /></el-icon>
+        <iconify-icon icon="mdi:file-document-outline" width="18" class="menu-icon" />
         <span>查看关联题目</span>
       </div>
       <div class="menu-divider"></div>
       <div
-        class="menu-item"
+        class="menu-item menu-item--danger"
         :class="{ 'menu-item--disabled': nodeType === 'module' }"
         @click="nodeType !== 'module' && handleAction('delete')"
       >
-        <el-icon><Delete /></el-icon>
+        <iconify-icon icon="mdi:trash-can-outline" width="18" class="menu-icon" />
         <span>删除节点</span>
       </div>
     </div>
@@ -70,40 +70,72 @@ function handleClickOutside() {
 }
 
 .context-menu {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  padding: 6px 0;
-  min-width: 160px;
+  background: var(--bg-surface);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-hand-drawn-soft);
+  box-shadow: var(--shadow-md), var(--shadow-hand-drawn);
+  padding: 8px 6px;
+  min-width: 172px;
+  font-family: var(--font-heading);
+  animation: cardEnter var(--transition-bounce) both;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 10px;
+  padding: 8px 12px;
   cursor: pointer;
   font-size: 14px;
-  color: #303133;
-  transition: background-color 0.2s;
+  color: var(--text-primary, #4A3F2F);
+  border-radius: var(--radius-hand-drawn-soft);
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  font-family: var(--font-heading);
+}
+
+.menu-icon {
+  flex-shrink: 0;
+  color: currentColor;
 }
 
 .menu-item:hover {
-  background-color: #f5f7fa;
+  background-color: var(--primary-bg);
+  color: var(--primary-color);
+  transform: translateX(2px);
 }
 
-.menu-item--disabled {
+.menu-item--danger {
+  color: var(--accent-color);
+}
+
+.menu-item--danger:hover {
+  background-color: rgba(192, 105, 74, 0.12);
+  color: var(--accent-color);
+}
+
+.menu-item--disabled,
+.menu-item--disabled:hover {
   color: #c0c4cc;
   cursor: not-allowed;
-}
-
-.menu-item--disabled:hover {
   background-color: transparent;
+  transform: none;
 }
 
 .menu-divider {
   height: 1px;
-  background-color: #ebeef5;
-  margin: 4px 0;
+  background-color: var(--border-light);
+  margin: 6px 4px;
+  opacity: 0.7;
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 </style>

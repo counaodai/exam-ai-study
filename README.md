@@ -16,6 +16,7 @@
     <a href="#%E6%8A%80%E6%9C%AF%E6%A0%88">技术栈</a> •
     <a href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">快速开始</a> •
     <a href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84">项目结构</a> •
+    <a href="#camera-%E9%A1%B9%E7%9B%AE%E6%88%AA%E5%9B%BE">项目截图</a> •
     <a href="#%E8%B4%A1%E7%8C%AE%E6%8C%87%E5%8D%97">贡献指南</a> •
     <a href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98">FAQ</a>
   </p>
@@ -236,6 +237,46 @@ exam-ai-study/
 ├── docker-compose.yml                 # Docker Compose 配置
 └── README.md                          # 项目说明
 ```
+
+---
+
+## :camera: 项目截图
+
+### 首页
+
+![首页](docs/screenshots/home.png)
+
+> 简洁清新的首页设计，"慢慢来，比较快"——AI帮你把厚书读薄，每天只专注搞懂几道题。
+
+### AI 智能问答
+
+![AI问答](docs/screenshots/chat.png)
+
+> 基于知识库的智能问答，AI自动分类题目、生成思维导图标签，边聊边学。
+
+### 核心功能特性
+
+![功能特性](docs/screenshots/features.png)
+
+> 题目自动分类、导图自动生成、方法自动提取——你只管问，剩下的交给我。
+
+### 工作台仪表盘
+
+![工作台](docs/screenshots/dashboard.png)
+
+> 一目了然的学习数据总览：文档总数、累计题目、对话次数、方法论统计，快速开始各项功能。
+
+### 思维导图
+
+![思维导图](docs/screenshots/mindmap.png)
+
+> 两级知识体系可视化：模块 → 主题，支持搜索、添加节点、导入题目，知识脉络清晰可见。
+
+### 统计分析
+
+![统计分析](docs/screenshots/analysis.png)
+
+> 多维度数据统计：模块分布、题目数量、方法论覆盖度，用数据驱动高效备考。
 
 ---
 

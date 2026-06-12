@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import type { MindMap } from '@/types/mindmap'
 import { useMindMapStore } from '@/stores/mindmap'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Edit, Delete, Search } from '@element-plus/icons-vue'
+import { Search } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const mindMapStore = useMindMapStore()
@@ -41,7 +42,7 @@ async function handleCreate() {
   }
 }
 
-function openEditDialog(map: any) {
+function openEditDialog(map: MindMap) {
   editForm.value = { mapId: map.id, title: map.title }
   showEditDialog.value = true
 }
@@ -60,7 +61,7 @@ async function handleEdit() {
   }
 }
 
-async function handleDelete(map: any) {
+async function handleDelete(map: MindMap) {
   try {
     await ElMessageBox.confirm(`确定要删除思维导图「${map.title}」吗？此操作不可恢复。`, '删除确认', {
       confirmButtonText: '确定删除',
@@ -75,19 +76,20 @@ async function handleDelete(map: any) {
 }
 
 // 过滤后的思维导图列表
-const filteredMindMaps = () => {
+const filteredMindMaps = computed(() => {
   if (!searchKeyword.value.trim()) {
     return mindMapStore.mindMaps
   }
   const kw = searchKeyword.value.toLowerCase()
   return mindMapStore.mindMaps.filter((m) => m.title.toLowerCase().includes(kw))
-}
+})
 </script>
 
 <template>
   <div class="mindmap-page">
     <div class="page-header">
       <div class="header-left">
+        <iconify-icon icon="mdi:sitemap-outline" width="28" class="header-icon" />
         <h1>思维导图</h1>
       </div>
       <div class="header-actions">
@@ -98,7 +100,10 @@ const filteredMindMaps = () => {
           clearable
           style="width: 240px"
         />
-        <el-button type="primary" :icon="Plus" @click="openCreateDialog">新建思维导图</el-button>
+        <el-button type="primary" @click="openCreateDialog">
+          <iconify-icon icon="mdi:plus" width="16" style="margin-right: 4px" />
+          新建思维导图
+        </el-button>
       </div>
     </div>
 
@@ -133,24 +138,34 @@ const filteredMindMaps = () => {
 
     <!-- 思维导图列表 -->
     <el-row :gutter="20">
-      <el-col v-for="map in filteredMindMaps()" :key="map.id" :span="8">
+      <el-col v-for="map in filteredMindMaps" :key="map.id" :span="8">
         <el-card shadow="hover" class="map-card" @click="navigateToDetail(map.id)">
           <div class="card-header">
             <div class="map-title">{{ map.title }}</div>
             <div class="card-actions" @click.stop>
-              <el-button size="small" :icon="Edit" circle text @click="openEditDialog(map)" />
-              <el-button size="small" :icon="Delete" circle text type="danger" @click="handleDelete(map)" />
+              <el-button size="small" circle text @click="openEditDialog(map)">
+                <iconify-icon icon="mdi:pencil-outline" width="14" />
+              </el-button>
+              <el-button size="small" circle text type="danger" @click="handleDelete(map)">
+                <iconify-icon icon="mdi:trash-can-outline" width="14" />
+              </el-button>
             </div>
           </div>
           <div class="map-info">
-            <span>节点数：{{ map.nodes.length }}</span>
-            <span>更新：{{ new Date(map.updated_at).toLocaleDateString() }}</span>
+            <span>
+              <iconify-icon icon="mdi:dots-grid" width="14" />
+              节点数：{{ map.nodes.length }}
+            </span>
+            <span>
+              <iconify-icon icon="mdi:clock-outline" width="14" />
+              更新：{{ new Date(map.updated_at).toLocaleDateString() }}
+            </span>
           </div>
         </el-card>
       </el-col>
-      <el-col v-if="filteredMindMaps().length === 0" :span="24">
+      <el-col v-if="filteredMindMaps.length === 0" :span="24">
         <el-empty
-          :description="mindMapStore.mindMaps.length === 0 ? '暂无思维导图，请先导入文档' : '没有找到匹配的思维导图'"
+          :description="mindMapStore.mindMaps.length === 0 ? '还没有思维导图哦，先去导入一些文档吧' : '没找到匹配的，换个关键词试试'"
         />
       </el-col>
     </el-row>
@@ -159,7 +174,7 @@ const filteredMindMaps = () => {
 
 <style scoped>
 .mindmap-page {
-  animation: fadeIn 0.4s ease-out;
+  animation: fadeIn var(--transition-fade);
 }
 
 .page-header {
@@ -169,24 +184,21 @@ const filteredMindMaps = () => {
   margin-bottom: 24px;
 }
 
-.header-left h1 {
-  margin: 0;
-  font-family: var(--font-heading);
-  font-size: 24px;
-  position: relative;
-  padding-left: 14px;
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.header-left h1::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 22px;
-  background: var(--primary-gradient);
-  border-radius: 2px;
+.header-left .header-icon {
+  color: var(--primary-color, #5B8C5A);
+}
+
+.header-left h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--text-primary);
 }
 
 .header-actions {
@@ -198,7 +210,7 @@ const filteredMindMaps = () => {
 .map-card {
   cursor: pointer;
   margin-bottom: 20px;
-  transition: all var(--transition-normal);
+  transition: all var(--transition-hover-lift);
   overflow: hidden;
   position: relative;
 }
@@ -210,7 +222,7 @@ const filteredMindMaps = () => {
   right: 0;
   width: 80px;
   height: 80px;
-  background: radial-gradient(circle at top right, rgba(13, 148, 136, 0.06) 0%, transparent 70%);
+  background: radial-gradient(circle at top right, rgba(91, 140, 90, 0.08) 0%, transparent 70%);
   border-radius: 50%;
   transition: all var(--transition-normal);
 }
@@ -261,6 +273,7 @@ const filteredMindMaps = () => {
   justify-content: space-between;
   color: var(--text-muted);
   font-size: 13px;
+  font-family: var(--font-body);
   padding-top: 12px;
   border-top: 1px solid var(--border-light);
 }

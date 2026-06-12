@@ -30,9 +30,6 @@ export function deleteMindMap(id: string) {
   return request.delete<any, { message: string }>(`/mindmaps/${id}`)
 }
 
-export function generateMindMap(docId: string) {
-  return request.post<any, MindMap>('/mindmaps/generate', { doc_id: docId })
-}
 
 export function addNode(mapId: string, data: CreateNodeRequest) {
   return request.post<any, { node: MindMapNode; edge: MindMapEdge | null }>(`/mindmaps/${mapId}/nodes`, data)

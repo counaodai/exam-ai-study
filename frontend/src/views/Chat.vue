@@ -129,7 +129,7 @@ function handleClassificationCorrected(
     <div class="chat-main">
       <div ref="messageListRef" class="message-list">
         <div v-if="chatStore.messages.length === 0" class="empty-hint">
-          <div class="empty-icon">🤖</div>
+          <iconify-icon icon="mdi:leaf" width="56" class="empty-icon"></iconify-icon>
           <h2>公考AI助手</h2>
           <p>基于知识库的智能问答，帮你解答公考难题</p>
           <div class="hint-tips">
@@ -150,7 +150,7 @@ function handleClassificationCorrected(
           :class="msg.role"
         >
           <div class="message-avatar">
-            <el-avatar :size="36" :style="{ background: msg.role === 'user' ? '#409eff' : '#67c23a' }">
+            <el-avatar :size="36" :style="{ background: msg.role === 'user' ? 'var(--accent-color)' : 'var(--primary-color)' }">
               {{ msg.role === 'user' ? '我' : 'AI' }}
             </el-avatar>
           </div>
@@ -239,23 +239,23 @@ function handleClassificationCorrected(
   display: flex;
   height: calc(100vh - 120px);
   gap: 16px;
-  animation: fadeIn 0.4s ease-out;
+  animation: fadeIn var(--transition-fade);
 }
 
 .chat-sidebar {
   width: 260px;
   background: var(--bg-surface);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-hand-drawn-soft);
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-light);
+  border: 2px solid var(--border-light);
   overflow: hidden;
 }
 
 .sidebar-header {
   padding: 14px;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 2px dashed var(--border-color);
 }
 
 .conversation-list {
@@ -266,7 +266,7 @@ function handleClassificationCorrected(
 
 .conversation-item {
   padding: 12px 14px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-hand-drawn-soft);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -274,6 +274,7 @@ function handleClassificationCorrected(
   margin-bottom: 4px;
   transition: all var(--transition-fast);
   position: relative;
+  font-family: var(--font-heading);
 }
 
 .conversation-item::before {
@@ -281,12 +282,12 @@ function handleClassificationCorrected(
   position: absolute;
   left: 0;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) rotate(-2deg);
   width: 3px;
   height: 0;
   background: var(--primary-gradient);
-  border-radius: 0 2px 2px 0;
-  transition: height var(--transition-fast);
+  border-radius: 0 3px 3px 0;
+  transition: height var(--transition-bounce);
 }
 
 .conversation-item:hover,
@@ -295,7 +296,7 @@ function handleClassificationCorrected(
 }
 
 .conversation-item.active {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .conversation-item:hover::before,
@@ -338,16 +339,17 @@ function handleClassificationCorrected(
   padding: 30px 20px;
   color: var(--text-muted);
   font-size: 14px;
+  font-family: var(--font-display);
 }
 
 .chat-main {
   flex: 1;
   background: var(--bg-surface);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-hand-drawn-soft);
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-light);
+  border: 2px solid var(--border-light);
   overflow: hidden;
 }
 
@@ -361,13 +363,14 @@ function handleClassificationCorrected(
   text-align: center;
   padding-top: 80px;
   color: var(--text-muted);
-  animation: fadeIn 0.5s ease-out;
+  animation: fadeIn var(--transition-fade);
 }
 
 .empty-icon {
-  font-size: 56px;
+  display: block;
   margin-bottom: 20px;
   opacity: 0.85;
+  color: var(--primary-color);
 }
 
 .empty-hint h2 {
@@ -381,6 +384,7 @@ function handleClassificationCorrected(
   margin-bottom: 24px;
   color: var(--text-secondary);
   font-size: 15px;
+  font-family: var(--font-display);
 }
 
 .hint-tips {
@@ -392,8 +396,9 @@ function handleClassificationCorrected(
 
 .tip-tag {
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-hover-lift);
   border: 1px solid var(--border-color);
+  font-family: var(--font-heading);
 }
 
 .tip-tag:hover {
@@ -408,7 +413,7 @@ function handleClassificationCorrected(
   display: flex;
   gap: 14px;
   margin-bottom: 28px;
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn var(--transition-fade);
 }
 
 .message-item.user {
@@ -430,7 +435,7 @@ function handleClassificationCorrected(
 
 .message-text {
   padding: 14px 18px;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-hand-drawn-soft);
   line-height: 1.7;
   position: relative;
 }
@@ -440,14 +445,14 @@ function handleClassificationCorrected(
   color: #fff;
   white-space: pre-wrap;
   border-bottom-right-radius: 4px;
-  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.2);
+  box-shadow: 0 2px 8px rgba(91, 140, 90, 0.25);
 }
 
 .ai-text {
   background: var(--bg-muted);
   color: var(--text-primary);
   border-bottom-left-radius: 4px;
-  border: 1px solid var(--border-light);
+  border: 2px solid var(--border-light);
 }
 
 .ai-text :deep(p) {
@@ -465,7 +470,7 @@ function handleClassificationCorrected(
 }
 
 .ai-text :deep(code) {
-  background: rgba(13, 148, 136, 0.08);
+  background: rgba(91, 140, 90, 0.08);
   padding: 2px 8px;
   border-radius: var(--radius-sm);
   font-size: 13px;
@@ -473,10 +478,10 @@ function handleClassificationCorrected(
 }
 
 .ai-text :deep(pre) {
-  background: #1e293b;
-  color: #e2e8f0;
+  background: #3A3228;
+  color: #E8E0CC;
   padding: 16px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-hand-drawn-soft);
   overflow-x: auto;
   margin: 12px 0;
   box-shadow: var(--shadow-inner);
@@ -498,9 +503,9 @@ function handleClassificationCorrected(
   padding-left: 14px;
   margin: 10px 0;
   color: var(--text-secondary);
-  background: rgba(13, 148, 136, 0.04);
+  background: rgba(91, 140, 90, 0.04);
   padding: 10px 14px;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-radius: 0 var(--radius-hand-drawn-soft) var(--radius-hand-drawn-soft) 0;
 }
 
 .loading-text {
@@ -551,6 +556,7 @@ function handleClassificationCorrected(
   font-size: 12px;
   color: var(--text-muted);
   font-weight: 500;
+  font-family: var(--font-heading);
 }
 
 .source-list {
@@ -561,7 +567,7 @@ function handleClassificationCorrected(
 
 .source-card {
   text-align: left;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-hover-lift);
 }
 
 .source-card:hover {
@@ -594,7 +600,7 @@ function handleClassificationCorrected(
 
 .input-area {
   padding: 18px 20px;
-  border-top: 1px solid var(--border-light);
+  border-top: 2px dashed var(--border-color);
   display: flex;
   gap: 12px;
   align-items: flex-end;
@@ -602,15 +608,16 @@ function handleClassificationCorrected(
 }
 
 .input-area :deep(.el-textarea__inner) {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
+  border-radius: var(--radius-hand-drawn-soft);
+  border: 2px solid var(--border-color);
   transition: all var(--transition-fast);
   resize: none;
+  font-family: var(--font-body);
 }
 
 .input-area :deep(.el-textarea__inner:focus) {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.1);
+  box-shadow: 0 0 0 3px rgba(91, 140, 90, 0.12);
 }
 
 .input-area :deep(.el-textarea__inner:hover) {
@@ -618,17 +625,19 @@ function handleClassificationCorrected(
 }
 
 :deep(.el-button--primary) {
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-hand-drawn-soft);
   padding: 12px 24px;
   height: auto;
   align-self: flex-end;
+  font-family: var(--font-heading);
 }
 
 :deep(.el-button--danger) {
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-hand-drawn-soft);
   padding: 12px 24px;
   height: auto;
   align-self: flex-end;
+  font-family: var(--font-heading);
 }
 
 @media (max-width: 768px) {
@@ -636,12 +645,12 @@ function handleClassificationCorrected(
     flex-direction: column;
     height: auto;
   }
-  
+
   .chat-sidebar {
     width: 100%;
     max-height: 200px;
   }
-  
+
   .message-body {
     max-width: 90%;
   }

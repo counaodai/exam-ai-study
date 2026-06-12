@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { PriceTag, Share, Edit, Trophy } from '@element-plus/icons-vue'
 import type { ClassificationResult, MindMapUpdateResult } from '@/types/chat'
 import { updateMessageClassification } from '@/api/chat'
 
@@ -36,9 +36,9 @@ const confidenceText = computed(() => {
 
 const masteryColor = computed(() => {
   if (!props.mindmapUpdate) return ''
-  if (props.mindmapUpdate.mastery >= 80) return '#67C23A'
-  if (props.mindmapUpdate.mastery >= 60) return '#E6A23C'
-  return '#F56C6C'
+  if (props.mindmapUpdate.mastery >= 80) return 'var(--success-color)'
+  if (props.mindmapUpdate.mastery >= 60) return 'var(--warning-color)'
+  return 'var(--accent-color)'
 })
 
 const showCorrection = ref(false)
@@ -52,7 +52,7 @@ const secondaryModuleMap: Record<string, string[]> = {
   '言语理解与表达': ['逻辑填空', '片段阅读', '语句表达'],
   '数量关系': ['数学运算', '数字推理'],
   '判断推理': ['图形推理', '定义判断', '类比推理', '逻辑判断'],
-  '资料分析': ['增长率', '增长量', '比重', '倍数', '平均数', '综合分析'],
+  '资料分析': ['增长量', '增长率', '比重', '倍数', '平均数', '综合分析'],
   '常识判断': ['政治', '法律', '经济', '历史', '地理', '科技', '文学'],
 }
 
@@ -107,13 +107,13 @@ watch(() => correctionModule.value, () => {
 <template>
   <div class="classification-container">
     <div class="classification-tag-row">
-      <el-icon class="tag-icon"><PriceTag /></el-icon>
+      <iconify-icon icon="mdi:tag-outline" width="16" class="tag-icon" />
       <span class="tag-label">已归类：</span>
       <el-tag :type="confidenceType" effect="plain" size="small">
         {{ modulePath }}
       </el-tag>
       <el-tag type="info" effect="plain" size="small" class="confidence-tag">
-        置信度: {{ confidenceText }}
+        置信度 {{ confidenceText }}
       </el-tag>
     </div>
 
@@ -125,7 +125,7 @@ watch(() => correctionModule.value, () => {
       <div class="update-stats">
         <el-statistic title="节点题目数" :value="mindmapUpdate.question_count">
           <template #suffix>
-            <span class="stat-suffix">题</span>
+            <span class="stat-suffix">道</span>
           </template>
         </el-statistic>
         <el-statistic title="掌握度" :value="mindmapUpdate.mastery">
@@ -155,15 +155,15 @@ watch(() => correctionModule.value, () => {
 
       <div class="action-buttons">
         <el-button type="primary" link @click="handleViewMindMap">
-          <el-icon><Share /></el-icon>
+          <iconify-icon icon="mdi:sitemap-outline" width="16" />
           查看思维导图
         </el-button>
         <el-button v-if="mindmapUpdate.method_id" type="success" link @click="handleViewMethod">
-          <el-icon><Trophy /></el-icon>
+          <iconify-icon icon="mdi:lightbulb-on-outline" width="16" />
           查看方法论
         </el-button>
         <el-button type="default" link @click="handleCorrect">
-          <el-icon><Edit /></el-icon>
+          <iconify-icon icon="mdi:pencil-outline" width="16" />
           修正分类
         </el-button>
       </div>
@@ -171,7 +171,7 @@ watch(() => correctionModule.value, () => {
 
     <div v-else class="action-buttons">
       <el-button type="default" link @click="handleCorrect">
-        <el-icon><Edit /></el-icon>
+        <iconify-icon icon="mdi:pencil-outline" width="16" />
         修正分类
       </el-button>
     </div>
@@ -218,9 +218,10 @@ watch(() => correctionModule.value, () => {
 .classification-container {
   margin-top: 10px;
   padding: 12px 14px;
-  background: linear-gradient(135deg, rgba(240, 253, 250, 0.6) 0%, rgba(255, 255, 255, 0.8) 100%);
-  border-radius: var(--radius-md);
-  border-left: 3px solid var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-bg) 0%, var(--bg-surface) 100%);
+  border-radius: var(--radius-hand-drawn-soft);
+  border: 2px solid var(--primary-lighter);
+  border-left: 4px solid var(--primary-color);
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-fast);
 }
@@ -245,6 +246,7 @@ watch(() => correctionModule.value, () => {
   font-size: 13px;
   color: var(--text-regular);
   font-weight: 500;
+  font-family: var(--font-heading);
 }
 
 .confidence-tag {
@@ -259,6 +261,7 @@ watch(() => correctionModule.value, () => {
   font-size: 12px;
   color: var(--text-muted);
   font-weight: 500;
+  font-family: var(--font-heading);
 }
 
 .update-stats {
@@ -283,7 +286,7 @@ watch(() => correctionModule.value, () => {
 
 .action-buttons .el-button {
   font-weight: 500;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-hover-lift);
 }
 
 .action-buttons .el-button:hover {

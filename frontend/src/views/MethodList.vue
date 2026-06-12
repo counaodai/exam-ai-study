@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { useMethodStore } from '@/stores/method'
-import { Document, View, Loading } from '@element-plus/icons-vue'
 import type { MethodSummary } from '@/types/method'
 
 const router = useRouter()
@@ -35,7 +34,10 @@ function handleFilter(module: string) {
 <template>
   <div class="method-list-page">
     <div class="page-header">
-      <h1>方法论总结</h1>
+      <h1>
+        <iconify-icon icon="mdi:lightbulb-on-outline" class="title-icon" />
+        方法论总结
+      </h1>
       <p>AI 自动分析题目生成的解题方法论</p>
     </div>
 
@@ -62,11 +64,15 @@ function handleFilter(module: string) {
     </div>
 
     <div v-else-if="filteredMethods.length === 0" class="empty-state">
-      <el-empty description="暂无方法论">
+      <el-empty description="还没有方法论呢">
         <template #image>
-          <div class="empty-icon">📚</div>
+          <iconify-icon
+            icon="mdi:book-open-page-variant-outline"
+            width="64"
+            style="color: var(--primary-lighter)"
+          />
         </template>
-        <p class="empty-tip">当某个分类积累足够题目后，系统会自动生成方法论</p>
+        <p class="empty-tip">做几道题先，AI 会帮你总结套路</p>
       </el-empty>
     </div>
 
@@ -92,11 +98,11 @@ function handleFilter(module: string) {
 
         <div class="card-stats">
           <span class="stat-item">
-            <el-icon><Document /></el-icon>
+            <iconify-icon icon="mdi:file-document-outline" width="16" />
             {{ method.question_count }} 道题目
           </span>
           <span class="stat-item">
-            <el-icon><View /></el-icon>
+            <iconify-icon icon="mdi:format-list-numbered" width="16" />
             {{ method.steps.length }} 个步骤
           </span>
         </div>
@@ -114,7 +120,7 @@ function handleFilter(module: string) {
 <style scoped>
 .method-list-page {
   padding: 0 4px;
-  animation: fadeIn 0.4s ease-out;
+  animation: fadeIn var(--transition-fade);
 }
 
 .page-header {
@@ -123,30 +129,25 @@ function handleFilter(module: string) {
 
 .page-header h1 {
   margin: 0 0 8px 0;
-  font-size: 24px;
-  font-family: var(--font-heading);
+  font-size: 26px;
+  font-family: var(--font-display);
   color: var(--text-primary);
-  position: relative;
-  padding-left: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.page-header h1::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 22px;
-  background: var(--primary-gradient);
-  border-radius: 2px;
+.page-header h1 .title-icon {
+  color: var(--primary-color);
+  font-size: 28px;
 }
 
 .page-header p {
   margin: 0;
   color: var(--text-muted);
   font-size: 14px;
-  padding-left: 14px;
+  font-family: var(--font-body);
+  padding-left: 38px;
 }
 
 .filter-bar {
@@ -164,15 +165,11 @@ function handleFilter(module: string) {
   padding: 60px 0;
 }
 
-.empty-icon {
-  font-size: 64px;
-  opacity: 0.7;
-}
-
 .empty-tip {
   color: var(--text-muted);
   font-size: 14px;
   margin-top: 8px;
+  font-family: var(--font-body);
 }
 
 .method-grid {
@@ -183,7 +180,7 @@ function handleFilter(module: string) {
 
 .method-card {
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: var(--transition-hover-lift);
   overflow: hidden;
   position: relative;
 }
@@ -194,8 +191,9 @@ function handleFilter(module: string) {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 4px;
   background: var(--primary-gradient);
+  border-radius: var(--radius-hand-drawn-soft) var(--radius-hand-drawn-soft) 0 0;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--transition-normal);
@@ -253,7 +251,7 @@ function handleFilter(module: string) {
 }
 
 .card-footer {
-  border-top: 1px solid var(--border-light);
+  border-top: 1.5px dashed var(--border-light);
   padding-top: 14px;
 }
 

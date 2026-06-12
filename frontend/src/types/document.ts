@@ -37,6 +37,7 @@ export interface UploadQueueItem {
   file: File
   filename: string
   file_size: number
+  module?: string
   status: UploadQueueStatus
   progress: number
   error: string | null

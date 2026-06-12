@@ -4,9 +4,15 @@ import type { RouteRecordRaw } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    name: 'Home',
+    component: () => import('@/views/Home.vue'),
+    meta: { title: '首页', layout: 'landing' },
+  },
+  {
+    path: '/dashboard',
     name: 'Dashboard',
     component: () => import('@/views/Dashboard.vue'),
-    meta: { title: '首页' },
+    meta: { title: '工作台' },
   },
   {
     path: '/upload',

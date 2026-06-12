@@ -32,17 +32,6 @@ export const useMindMapStore = defineStore('mindmap', () => {
     }
   }
 
-  async function generateMindMap(docId: string) {
-    loading.value = true
-    try {
-      const map = await mindmapApi.generateMindMap(docId)
-      mindMaps.value.push(map)
-      return map
-    } finally {
-      loading.value = false
-    }
-  }
-
   async function refreshCurrentMindMap() {
     if (currentMindMap.value) {
       await fetchMindMapDetail(currentMindMap.value.id)
@@ -184,7 +173,6 @@ export const useMindMapStore = defineStore('mindmap', () => {
     addMindMap,
     updateMindMapTitle,
     removeMindMap,
-    generateMindMap,
     refreshCurrentMindMap,
     addNode,
     deleteNode,

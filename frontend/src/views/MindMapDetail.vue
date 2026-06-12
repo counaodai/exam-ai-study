@@ -12,7 +12,7 @@ import NodeContextMenu from '@/components/mindmap/NodeContextMenu.vue'
 import NodeDetailDrawer from '@/components/mindmap/NodeDetailDrawer.vue'
 import EdgeContextMenu from '@/components/mindmap/EdgeContextMenu.vue'
 import ImportEntryDialog from '@/components/mindmap/ImportEntryDialog.vue'
-import { ArrowLeft, FullScreen, Plus, Refresh, Search, MagicStick, Upload } from '@element-plus/icons-vue'
+import { ArrowLeft, ArrowDown, FullScreen, Plus, Refresh, Search, MagicStick, Upload } from '@element-plus/icons-vue'
 import type { MindMapNode as MindMapNodeType, NodeType, EdgeType } from '@/types/mindmap'
 import { calcAutoLayout, type LayoutDirection } from '@/utils/mindmapLayout'
 import '@vue-flow/core/dist/style.css'
@@ -45,7 +45,7 @@ const edgeMenuVisible = ref(false)
 const edgeMenuPosition = ref({ x: 0, y: 0 })
 const edgeMenuEdgeId = ref('')
 const edgeMenuType = ref<EdgeType>('default')
-const edgeMenuColor = ref('#409EFF')
+const edgeMenuColor = ref('#5B8C5A')
 const edgeMenuHasArrow = ref(true)
 const edgeMenuAnimated = ref(false)
 
@@ -104,7 +104,7 @@ watch(
 // 把后端 edge 转成 vue-flow 需要的格式
 function buildFlowEdge(edge: any) {
   const hasArrow = edge.has_arrow !== false
-  const color = edge.color || '#409EFF'
+  const color = edge.color || '#5B8C5A'
   const strokeWidth = edge.stroke_width || 2
   return {
     id: edge.id,
@@ -275,7 +275,7 @@ function handleEdgeContextMenu(payload: { event: MouseEvent | TouchEvent; edge: 
   const e = payload.edge
   edgeMenuEdgeId.value = e.id
   edgeMenuType.value = (e.data?.edge_type as EdgeType) || 'default'
-  edgeMenuColor.value = e.data?.color || '#409EFF'
+  edgeMenuColor.value = e.data?.color || '#5B8C5A'
   edgeMenuHasArrow.value = e.data?.has_arrow !== false
   edgeMenuAnimated.value = !!e.data?.animated
   edgeMenuPosition.value = { x: evt.clientX || 0, y: evt.clientY || 0 }
@@ -473,7 +473,7 @@ async function handleImportCompleted(result: { importedCount: number; importedId
         />
         <el-dropdown @command="(d) => applyAutoLayout(d)">
           <el-button :icon="MagicStick">
-            自动布局<el-icon class="el-icon--right"><arrow-down /></el-icon>
+            自动布局<el-icon class="el-icon--right"><ArrowDown /></el-icon>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
@@ -523,17 +523,17 @@ async function handleImportCompleted(result: { importedCount: number; importedId
           />
         </template>
 
-        <Background pattern-color="#aaa" :gap="16" />
+        <Background pattern-color="#D9D0BC" :gap="16" />
         <Controls />
         <MiniMap
           :node-color="(node) => {
             const colors: Record<string, string> = {
-              module: '#409EFF',
-              topic: '#67C23A',
-              method: '#E6A23C',
-              question: '#909399',
+              module: '#5B8C5A',
+              topic: '#7BA07A',
+              method: '#C4A35A',
+              question: '#8A7E6A',
             }
-            return colors[node.data?.type] || '#409EFF'
+            return colors[node.data?.type] || '#5B8C5A'
           }"
           :mask-color="'rgba(255, 255, 255, 0.8)'"
         />
@@ -608,7 +608,7 @@ async function handleImportCompleted(result: { importedCount: number; importedId
   height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn var(--transition-fade);
 }
 
 .detail-header {
@@ -618,8 +618,8 @@ async function handleImportCompleted(result: { importedCount: number; importedId
   margin-bottom: 16px;
   padding: 14px 18px;
   background: var(--bg-surface);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-light);
+  border-radius: var(--radius-hand-drawn-soft);
+  border: 2px solid var(--border-light);
   box-shadow: var(--shadow-sm);
 }
 
@@ -631,8 +631,8 @@ async function handleImportCompleted(result: { importedCount: number; importedId
 
 .header-left h1 {
   margin: 0;
-  font-size: 20px;
-  font-family: var(--font-heading);
+  font-size: 22px;
+  font-family: var(--font-display);
   color: var(--text-primary);
   font-weight: 600;
 }
@@ -646,8 +646,8 @@ async function handleImportCompleted(result: { importedCount: number; importedId
 
 .flow-container {
   flex: 1;
-  background: linear-gradient(180deg, #fafbfc 0%, #f5f7fa 100%);
-  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, var(--bg-color) 0%, var(--bg-muted) 100%);
+  border-radius: var(--radius-hand-drawn);
   overflow: hidden;
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-md);
@@ -664,7 +664,7 @@ async function handleImportCompleted(result: { importedCount: number; importedId
 
 :deep(.vue-flow__edge.selected .vue-flow__edge-path) {
   stroke-width: 3 !important;
-  filter: drop-shadow(0 0 4px rgba(64, 158, 255, 0.4));
+  filter: drop-shadow(0 0 4px rgba(91, 140, 90, 0.4));
 }
 
 :deep(.vue-flow__edge:hover .vue-flow__edge-path) {
@@ -673,14 +673,14 @@ async function handleImportCompleted(result: { importedCount: number; importedId
 }
 
 :deep(.vue-flow__controls) {
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-hand-drawn-soft);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-light);
   overflow: hidden;
 }
 
 :deep(.vue-flow__minimap) {
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-hand-drawn-soft);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-light);
   overflow: hidden;

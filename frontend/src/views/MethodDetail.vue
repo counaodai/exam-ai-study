@@ -3,7 +3,6 @@ import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useMethodStore } from '@/stores/method'
-import { ArrowLeft, Edit, Document, Warning, Sunny, Trophy } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -31,8 +30,14 @@ function handleViewQuestions() {
   <div class="method-detail-page">
     <div class="page-header">
       <div class="header-left">
-        <el-button :icon="ArrowLeft" @click="handleBack">返回列表</el-button>
-        <h1 v-if="methodStore.currentMethod">{{ methodStore.currentMethod.method_name }}</h1>
+        <el-button @click="handleBack">
+          <iconify-icon icon="mdi:arrow-left" width="16" style="margin-right: 4px" />
+          返回列表
+        </el-button>
+        <h1 v-if="methodStore.currentMethod">
+          <iconify-icon icon="mdi:lightbulb-on-outline" class="title-icon" />
+          {{ methodStore.currentMethod.method_name }}
+        </h1>
       </div>
       <div class="header-right">
         <el-tag v-if="methodStore.currentMethod?.is_auto_generated" type="success">
@@ -52,7 +57,7 @@ function handleViewQuestions() {
       <el-card class="section-card summary-card">
         <template #header>
           <div class="card-title">
-            <el-icon><Trophy /></el-icon>
+            <iconify-icon icon="mdi:trophy-outline" width="20" />
             <span>方法论总结</span>
           </div>
         </template>
@@ -66,7 +71,7 @@ function handleViewQuestions() {
       <el-card v-if="methodStore.currentMethod.recognition" class="section-card">
         <template #header>
           <div class="card-title">
-            <el-icon><Document /></el-icon>
+            <iconify-icon icon="mdi:file-document-outline" width="20" />
             <span>识别特征</span>
           </div>
         </template>
@@ -77,7 +82,7 @@ function handleViewQuestions() {
       <el-card class="section-card">
         <template #header>
           <div class="card-title">
-            <el-icon><Document /></el-icon>
+            <iconify-icon icon="mdi:file-document-outline" width="20" />
             <span>解题步骤</span>
           </div>
         </template>
@@ -103,7 +108,7 @@ function handleViewQuestions() {
       <el-card v-if="methodStore.currentMethod.traps?.length" class="section-card">
         <template #header>
           <div class="card-title">
-            <el-icon><Warning /></el-icon>
+            <iconify-icon icon="mdi:alert-circle-outline" width="20" />
             <span>常见陷阱</span>
           </div>
         </template>
@@ -129,7 +134,7 @@ function handleViewQuestions() {
         <el-card v-if="methodStore.currentMethod.quick_tips?.length" class="section-card">
           <template #header>
             <div class="card-title">
-              <el-icon><Sunny /></el-icon>
+              <iconify-icon icon="mdi:white-balance-sunny" width="20" />
               <span>速记技巧</span>
             </div>
           </template>
@@ -143,7 +148,7 @@ function handleViewQuestions() {
         <el-card v-if="methodStore.currentMethod.key_formulas?.length" class="section-card">
           <template #header>
             <div class="card-title">
-              <el-icon><Document /></el-icon>
+              <iconify-icon icon="mdi:file-document-outline" width="20" />
               <span>关键公式</span>
             </div>
           </template>
@@ -156,7 +161,8 @@ function handleViewQuestions() {
       </div>
 
       <div class="action-bar">
-        <el-button type="primary" :icon="Document" @click="handleViewQuestions">
+        <el-button type="primary" @click="handleViewQuestions">
+          <iconify-icon icon="mdi:file-document-outline" width="16" style="margin-right: 4px" />
           查看关联题目
         </el-button>
       </div>
@@ -167,7 +173,7 @@ function handleViewQuestions() {
 <style scoped>
 .method-detail-page {
   padding: 0 4px;
-  animation: fadeIn 0.4s ease-out;
+  animation: fadeIn var(--transition-fade);
 }
 
 .page-header {
@@ -185,23 +191,17 @@ function handleViewQuestions() {
 
 .header-left h1 {
   margin: 0;
-  font-size: 24px;
-  font-family: var(--font-heading);
+  font-size: 26px;
+  font-family: var(--font-display);
   color: var(--text-primary);
-  position: relative;
-  padding-left: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.header-left h1::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 22px;
-  background: var(--primary-gradient);
-  border-radius: 2px;
+.header-left h1 .title-icon {
+  color: var(--primary-color);
+  font-size: 28px;
 }
 
 .loading-state {
@@ -230,7 +230,7 @@ function handleViewQuestions() {
 }
 
 .summary-card :deep(.el-card__body) {
-  background: linear-gradient(135deg, var(--primary-bg) 0%, rgba(255, 255, 255, 0.8) 100%);
+  background: linear-gradient(135deg, var(--primary-bg) 0%, var(--bg-surface) 100%);
   border-left: 4px solid var(--primary-color);
 }
 
@@ -238,6 +238,8 @@ function handleViewQuestions() {
   font-size: 16px;
   line-height: 1.9;
   color: var(--text-primary);
+  font-family: var(--font-body);
+  letter-spacing: 0.02em;
   margin: 0 0 14px 0;
 }
 
@@ -256,7 +258,7 @@ function handleViewQuestions() {
   margin: 10px 0 0;
   padding: 12px 16px;
   background: var(--bg-muted);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-hand-drawn-soft);
   border-left: 3px solid var(--accent-color);
 }
 
@@ -266,8 +268,9 @@ function handleViewQuestions() {
 
 :deep(.el-timeline-item__timestamp) {
   font-weight: 600;
+  font-family: var(--font-display);
   color: var(--primary-color);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 :deep(.el-timeline-item__node) {
@@ -276,7 +279,7 @@ function handleViewQuestions() {
 }
 
 :deep(.el-card[shadow="never"]) {
-  transition: all var(--transition-fast);
+  transition: var(--transition-hover-lift);
 }
 
 :deep(.el-card[shadow="never"]:hover) {
@@ -292,7 +295,7 @@ function handleViewQuestions() {
   margin-top: 10px;
   padding: 10px 14px;
   background: var(--bg-muted);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-hand-drawn-soft);
   font-size: 13px;
   color: var(--text-regular);
   border-left: 3px solid var(--accent-color);
@@ -307,10 +310,10 @@ function handleViewQuestions() {
 
 .trap-item {
   padding: 14px 16px;
-  background: linear-gradient(90deg, rgba(239, 68, 68, 0.06) 0%, transparent 100%);
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(239, 68, 68, 0.1);
-  transition: all var(--transition-fast);
+  background: linear-gradient(90deg, rgba(192, 105, 74, 0.08) 0%, transparent 100%);
+  border-radius: var(--radius-hand-drawn-soft);
+  border: 2px solid rgba(192, 105, 74, 0.18);
+  transition: var(--transition-hover-lift);
 }
 
 .trap-item:hover {
@@ -336,7 +339,7 @@ function handleViewQuestions() {
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: var(--el-color-success);
+  color: var(--primary-color);
   font-weight: 500;
 }
 
@@ -359,14 +362,17 @@ function handleViewQuestions() {
   color: var(--text-regular);
   margin-bottom: 8px;
   padding-left: 8px;
+  font-family: var(--font-body);
 }
 
 .tips-list li::marker {
   color: var(--primary-color);
+  font-family: var(--font-display);
 }
 
 .formulas-list li::marker {
   color: var(--accent-color);
+  font-family: var(--font-display);
 }
 
 .action-bar {

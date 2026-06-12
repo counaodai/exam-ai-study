@@ -82,7 +82,7 @@ function updateSelectAllState() {
 function handleConfirm() {
   const selected = questions.value.filter((q) => selectedIds.value.has(q.id))
   if (selected.length === 0) {
-    ElMessage.warning('请至少选择一道题目')
+    ElMessage.warning('选一个吧，至少挑一道题')
     return
   }
   emit('confirm', selected)
@@ -110,7 +110,7 @@ onMounted(() => {
     :model-value="visible"
     @update:model-value="(v: boolean) => emit('update:visible', v)"
     title="从历史题目选择"
-    width="700px"
+    width="720px"
     :close-on-click-modal="false"
   >
     <div class="selector-toolbar">
@@ -118,18 +118,25 @@ onMounted(() => {
         v-model="keyword"
         placeholder="搜索题目..."
         clearable
-        style="width: 240px"
+        style="width: 260px"
         @keyup.enter="handleSearch"
         @clear="handleSearch"
-      />
-      <span class="selected-count">已选 {{ selectedIds.size }} 道</span>
+      >
+        <template #prefix>
+          <iconify-icon icon="mdi:magnify" width="16" style="color: var(--text-muted)"></iconify-icon>
+        </template>
+      </el-input>
+      <span class="selected-count">
+        <iconify-icon icon="mdi:check-circle-outline" width="14" style="vertical-align: -2px; margin-right: 4px"></iconify-icon>
+        已选 <strong>{{ selectedIds.size }}</strong> 道
+      </span>
     </div>
 
     <el-table
       v-loading="loading"
       :data="questions"
       style="width: 100%"
-      max-height="400px"
+      max-height="420px"
       @selection-change="() => {}"
     >
       <el-table-column width="50">
@@ -157,13 +164,16 @@ onMounted(() => {
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="来源" width="80">
+      <el-table-column label="来源" width="100">
         <template #default="{ row }">
-          <el-tag size="small" :type="row.source === '手动导入' ? 'success' : ''">
+          <el-tag size="small" :type="row.source === '手动导入' ? 'success' : 'info'">
             {{ row.source || 'AI问答' }}
           </el-tag>
         </template>
       </el-table-column>
+      <template #empty>
+        <el-empty description="还是空的呢，先去添加一些吧" />
+      </template>
     </el-table>
 
     <div class="selector-pagination">
@@ -180,7 +190,7 @@ onMounted(() => {
     <template #footer>
       <el-button @click="emit('update:visible', false)">取消</el-button>
       <el-button type="primary" :disabled="selectedIds.size === 0" @click="handleConfirm">
-        确认选择 ({{ selectedIds.size }}道)
+        确认选择（{{ selectedIds.size }} 道）
       </el-button>
     </template>
   </el-dialog>
@@ -191,13 +201,25 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, var(--primary-bg) 0%, var(--bg-surface) 100%);
+  border: 2px dashed var(--primary-lighter);
+  border-radius: var(--radius-hand-drawn-soft);
 }
 
 .selected-count {
   font-size: 14px;
-  color: var(--el-color-primary);
+  font-family: var(--font-heading);
+  color: var(--primary-color);
   font-weight: 500;
+}
+
+.selected-count strong {
+  font-family: var(--font-display);
+  font-size: 18px;
+  margin: 0 2px;
+  color: var(--primary-color);
 }
 
 .question-content {
@@ -211,6 +233,7 @@ onMounted(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 400px;
+  color: var(--text-primary);
 }
 
 .module-tag {
@@ -220,6 +243,6 @@ onMounted(() => {
 .selector-pagination {
   display: flex;
   justify-content: center;
-  margin-top: 12px;
+  margin-top: 14px;
 }
 </style>

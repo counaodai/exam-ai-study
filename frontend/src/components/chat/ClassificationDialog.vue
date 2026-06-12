@@ -179,7 +179,7 @@ function handleConfirm() {
   flex-wrap: wrap;
   padding: 12px 16px;
   background: var(--bg-muted);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-hand-drawn-soft);
   margin-bottom: 4px;
 }
 
@@ -187,6 +187,7 @@ function handleConfirm() {
   font-size: 14px;
   color: var(--text-secondary);
   font-weight: 500;
+  font-family: var(--font-heading);
 }
 
 :deep(.el-divider) {
